@@ -10,7 +10,7 @@ export default function CoinCards(props: any) {
             <p>Price:${coin.current_price.toLocaleString()}</p>
             <p className={coin.price_change_24h >= 0 ? "possitive" : "negative"}>{coin.price_change_24h.toFixed(2)}%</p>
             <p>
-                Market Cap:{coin.market_cap.toLocaleString()}
+                Market Cap: {coin.market_cap.toLocaleString()}
             </p>
         </div>
     )

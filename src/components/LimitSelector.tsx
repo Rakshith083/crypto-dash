@@ -1,0 +1,16 @@
+export default function LimitSelector(props: any) {
+    const { limit, onChange } = props;
+    return (
+        <>
+            <div className="controls">
+                <label htmlFor="limit">Show</label>
+                <select name="limit" id="limit" value={limit} onChange={(e: any) => { onChange(Number(e.target.value)) }}>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div></>
+    )
+}
