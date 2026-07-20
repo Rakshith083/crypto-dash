@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react"
-import CoinCards from "./components/CoinCards"
-import LimitSelector from "./components/LimitSelector"
-import FilterInput from "./components/FilterInput"
-import SortSelector from "./components/SortSelector"
+import { BrowserRouter, Route, Routes } from "react-router"
+import Home from "./pages/home"
+import AboutPage from "./pages/about"
+import Header from "./components/headers"
+import CoinDetails from "./pages/coin-details"
+
 const API_URL = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page1&sparkline=false'
 
 export default function App() {
@@ -33,44 +35,28 @@ export default function App() {
     fetchCoins()
   }, [limit, sortBy]);
 
-  const filteredCoins = coins.filter((coins: any) => {
-    return (coins.name.toLowerCase().includes(filter.toLocaleLowerCase()) ||
-      coins.symbol.toLowerCase().includes(filter.toLocaleLowerCase()))
-  })
-    .slice()
-    .sort((a: any, b: any) => {
-      switch (sortBy) {
-        case 'market_cap_desc': return b.market_cap - a.market_cap
-        case 'market_cap_asc': return a.market_cap - b.market_cap
-        case 'price_desc': return b.current_price - a.current_price
-        case 'price_asc': return a.current_price - b.current_price
-        case 'change_desc': return b.price_change_percentage_24h - a.price_change_percentage_24h
-        case 'change_asc': return a.price_change_percentage_24h - b.price_change_percentage_24h
-        default: return 0
-      }
-    })
+
 
   return <div>
-    <h1>Crypto Dash</h1>
-    {loading && <p>Loading...</p>}
-    {error && <div className="error"> {error}</div>}
-    <div className="top-controls">
-      <FilterInput filter={filter} onFilterChange={setFilter}></FilterInput>
-      <LimitSelector limit={limit} onChange={setLimit}></LimitSelector>
-      <SortSelector sortBy={sortBy} onSortChange={setSortBy}></SortSelector>
-    </div>
-    {(!loading && !error) && (
-      <main className="grid">
-        {
-          filteredCoins.length === 0 && <p>No Matches</p>
-        }
-
-        {
-          filteredCoins.map((coin: any) => (
-            <CoinCards key={coin.id} coin={coin} />
-          ))
-        }
-      </main>
-    )}
+    <BrowserRouter>
+      <Header></Header>
+      <Routes>
+        <Route path="/" element={<Home
+          coins={coins}
+          filter={filter}
+          setFilter={setFilter}
+          limit={limit}
+          setLimit={setLimit}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          loading={loading}
+          error={error}
+        ></Home>}>
+        </Route>
+        <Route path="/about" element={<AboutPage></AboutPage>}></Route>
+        <Route path="/coin/:id" element={<CoinDetails />}></Route>
+        <Route path="*" element={<h2>Not found</h2>}></Route>
+      </Routes>
+    </BrowserRouter>
   </div>
 }
